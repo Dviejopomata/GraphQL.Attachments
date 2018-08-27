@@ -72,7 +72,7 @@ public class GraphQlControllerTests
                 }
             }
         };
-        var response = await queryExecutor.ExecutePost(queryRequest );
+        var response = await queryExecutor.ExecutePost(queryRequest);
 
         Assert.Equal("{\"data\":{\"addItem\":{\"itemCount\":2,\"attachmentCount\":0}}}", response.ResultStream.ConvertToString());
         Assert.Empty(response.Attachments);

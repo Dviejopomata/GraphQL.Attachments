@@ -110,19 +110,29 @@ namespace GraphQL.Attachments
             return getUri;
         }
 
+
+        class Payload
+        {
+            public string query;
+            public object variables;
+            public string operationName;
+        }
         static void AddQueryAndVariables(MultipartFormDataContent content, string query, object variables, string operationName)
         {
-            content.Add(new StringContent(query), "query");
-
-            if (operationName != null)
+            var payload = new Payload
             {
-                content.Add(new StringContent(operationName), "operationName");
-            }
+                query = query
+            };
 
             if (variables != null)
             {
-                content.Add(new StringContent(ToJson(variables)), "variables");
+                payload.variables= variables;
             }
+            if (operationName != null)
+            {
+                payload.operationName = operationName;
+            }
+            content.Add(new StringContent(ToJson(payload)), "operations");
         }
 
         static string ToJson(object target)

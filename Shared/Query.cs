@@ -21,5 +21,6 @@ public class Query : ObjectGraphType<object>
                 outgoingAttachments.AddString("key", "foo");
                 return items.First();
             });
+        
     }
 }

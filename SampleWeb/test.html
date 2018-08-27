@@ -1,32 +1,29 @@
 ﻿<!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-    <script>
-    function PostMutation() {
-        var data = new FormData();
-        var files = document.getElementById("files").files;
-        for (var i = 0; i < files.length; i++) {
-            data.append('files[]', files[i], files[i].name);
-        }
-        data.append("query", "mutation($item: ItemInput!){addItem(item: $item){itemCount attachmentCount}}");
-        data.append("variables", '{"item":{"name":"TheName"}}');
+<script>
+function PostMutation() {
+    var data = new FormData();
+    data.append('operations',
+        '{ "query": "mutation($item: ItemInput!){addItem(item: $item){itemCount attachmentCount}}, "variables": {"item":{"name":"TheName"}, "file": null } }');
+    data.append('map', '{ "0": ["variables.file"] }');
+    data.append('0', 'contents', 'a.txt');
 
-        var postSettings = {
-            method: 'POST',
-            body: data
-        };
+    var postSettings = {
+        method: 'POST',
+        body: data
+    };
 
-        return fetch('graphql', postSettings)
-            .then(function (data) {
-                return data.text().then(x => {
-                    result.innerHTML = x;
-                });
+    return fetch('graphql', postSettings)
+        .then(function (data) {
+            return data.text().then(x => {
+                result.innerHTML = x;
             });
-    }
-    </script>
+        });
+}
+</script>
 </head>
 <body>
-Select files: <input type="file" id="files" multiple /><br />
 <button onclick="PostMutation()">PostMutation</button><br />
 <pre id="result"></pre>
 </body>

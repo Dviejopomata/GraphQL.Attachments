@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 using GraphQL;
 using GraphQL.Attachments;
@@ -21,10 +22,10 @@ public class GraphQlController : ControllerBase
     [HttpPost]
     public async Task Post(CancellationToken cancellation)
     {
-        RequestReader.ReadPost(Request, out var query, out var inputs, out var incomingAttachments, out var operationName);
+        RequestReader.ReadPost(Request, out var query, out var inputs, out var incomingAttachments, out var operationName, out var map);
         using (var attachmentContext = new AttachmentContext(incomingAttachments))
         {
-            await Execute(cancellation, query, operationName, attachmentContext, inputs).ConfigureAwait(false);
+            await Execute(cancellation, query, operationName, attachmentContext, inputs, map).ConfigureAwait(false);
         }
     }
 
@@ -34,12 +35,16 @@ public class GraphQlController : ControllerBase
         RequestReader.ReadGet(Request, out var query, out var inputs, out var operationName);
         using (var attachmentContext = new AttachmentContext())
         {
-            await Execute(cancellation, query, operationName, attachmentContext, inputs).ConfigureAwait(false);
+            await Execute(cancellation, query, operationName, attachmentContext, inputs,null).ConfigureAwait(false);
         }
     }
 
-    async Task Execute(CancellationToken cancellation, string query, string operationName, AttachmentContext attachmentContext, Inputs inputs)
+    async Task Execute(CancellationToken cancellation, string query, string operationName, AttachmentContext attachmentContext, Inputs inputs, Dictionary<string, List<string>> map)
     {
+        if (map != null)
+        {
+            
+        }
         var executionOptions = new ExecutionOptions
         {
             Schema = schema,
